@@ -21,6 +21,14 @@ jobs:
 
       # TODO
       # Configure AWS credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::129361430828:role/apmlify_actions_hackpod_iam_role
+          role-session-name: GitHubActions
+          role-duration-seconds: 3600
+          mask-aws-account-id: true
       # CloudFormation Lint
       # CloudFormation Static Analysis
       # Build docker images
