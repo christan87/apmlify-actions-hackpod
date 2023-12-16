@@ -21,19 +21,24 @@ jobs:
 
       # TODO
       # Configure AWS credentials
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-region: us-east-1
-          role-to-assume: arn:aws:iam::129361430828:role/apmlify_actions_hackpod_iam_role
-          role-session-name: GitHubActions
-          role-duration-seconds: 3600
-          mask-aws-account-id: true
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.AWS_REGION }}
+
       # CloudFormation Lint
-      - name: Lint CloudFormation Templates
+      - name: Cfn Lint
+        id: cfn-lint
         uses: scottbrenner/cfn-lint-action@v2
-        with:
-          template: templates/*
+
+      - name: Run Cfn Lint
+        id: cfn-lint-run
+        run: |
+          shopt -s globstar # enable globbing
+          cfn-lint --version
+          cfn-lint -t ./templates/*.yaml
+          
       # CloudFormation Static Analysis
       # Build docker images
       # Set new image tag
